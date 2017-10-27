@@ -2,7 +2,7 @@ from pymongo import MongoClient
 import datetime
 import requests
 import json
-from geopy.geocoders import Nominatim
+
 
 class weather():
 
@@ -14,6 +14,7 @@ class weather():
         request_url = weather_url + 'appid=' + api_id + "&q="
         json_object = ""
 
+
         def __init__(self):
             print "Weather APP"
             client = MongoClient('localhost', 27017)
@@ -24,7 +25,14 @@ class weather():
             with open('C:\\Users\\HP-PC\\Downloads\\city.list.json') as data_file:
                 data = json.load(data_file)
 
-                print data
+            #for country in data:
+
+            r = requests.get(self.freegeoip)
+            j = json.loads(r.text)
+            current_country = j['country_code']
+
+            print current_country
+
 
         def get_user_location(self):
             print "Enter the current city you are in"
@@ -44,11 +52,18 @@ class weather():
 
             print "The current temperature in", self.q, "is", str(temp_celsius), "celsius and the current conditions are", current_conditions
 
-
+        def update_database(self):
+            """
+            now = datetime.datetime.now()
+            time_of_call = now.strftime("%H:%M")
+            self.db.weather.insert_one({"City": self.q,
+                                   "Weather Condition": self.current_conditions,
+                                   "time": time_of_call
+                                   })"""
 
 if __name__ == "__main__":
         w = weather()
         w.get_user_automatic()
-        #w.get_user_location()
+        w.get_user_location()
         w.call_api()
         w.process_json()
