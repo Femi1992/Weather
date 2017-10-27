@@ -16,29 +16,28 @@ class weather():
 
 
         def __init__(self):
-            print "Weather APP"
+            print "Weather APP\n"
             client = MongoClient('localhost', 27017)
             db = client.weather
             collection = db.weather_collection
+
 
         def get_user_automatic(self):
             with open('C:\\Users\\HP-PC\\Downloads\\city.list.json') as data_file:
                 data = json.load(data_file)
 
-            #for country in data:
-
             r = requests.get(self.freegeoip)
             j = json.loads(r.text)
-            current_country = j['country_code']
+            current_country = j['time_zone']
+            current_city = current_country.split("/")[1]
 
-            print current_country
+            print "You are currently in the city of", current_city,"\n"
 
 
         def get_user_location(self):
-            print "Enter the current city you are in"
-            self.q = raw_input("Location: ")
+            print "Enter the name of the city which you want to display the current weather forecast"
+            self.q = raw_input("City Name: ")
             self.request_url = self.request_url + self.q
-
 
 
         def call_api(self):
@@ -50,7 +49,7 @@ class weather():
             current_conditions = self.json_object['weather'][0]['description']
             temp_celsius = temp_kelvin - 273.15
 
-            print "The current temperature in", self.q, "is", str(temp_celsius), "celsius and the current conditions are", current_conditions
+            print "The current temperature in", self.q, "is", str(temp_celsius), "celsius and the current conditions are", current_conditions,"\n"
 
         def update_database(self):
             """
@@ -67,3 +66,4 @@ if __name__ == "__main__":
         w.get_user_location()
         w.call_api()
         w.process_json()
+        #w.update_database()
