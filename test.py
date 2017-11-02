@@ -23,16 +23,49 @@ class weather():
 
 
         def get_user_automatic(self):
-            with open('C:\\Users\\HP-PC\\Downloads\\city.list.json') as data_file:
-                data = json.load(data_file)
-
             r = requests.get(self.freegeoip)
             j = json.loads(r.text)
             current_country = j['time_zone']
             current_city = current_country.split("/")[1]
 
-            print "You are currently in the city of", current_city,"\n"
+            print "You are currently in the city of", current_city, "\n"
 
+
+            """
+            while True:
+
+                r = requests.get(self.freegeoip)
+                jsonResult = json.loads(r.text)
+
+                if jsonResult["country_code"] == "US":
+                    if jsonResult["zip_code"] != "":
+                        self.sort_stuff(jsonResult["zip_code"], True)
+                        break
+
+                if jsonResult["city"] != "":
+                    self.sort_stuff(jsonResult["city"], True)
+                    break
+
+                if jsonResult["time_zone"] != "":
+                    #call function
+                    break
+
+                raise Exception()
+                """
+
+        def sort_stuff(self, val, boolean):
+
+            if boolean == True:
+                pass
+
+            else:
+                loc = val.split('/')[1]
+                with open('C:\\Users\\HP-PC\\Downloads\\city.list.json') as data_file:
+                    data = json.load(data_file)
+
+                    data[loc]["id"]
+
+            print ""
 
         def get_user_location(self):
             print "Enter the name of the city which you want to display the current weather forecast"
@@ -51,6 +84,7 @@ class weather():
 
             print "The current temperature in", self.q, "is", str(temp_celsius), "celsius and the current conditions are", current_conditions,"\n"
 
+
         def update_database(self):
             """
             now = datetime.datetime.now()
@@ -66,4 +100,4 @@ if __name__ == "__main__":
         w.get_user_location()
         w.call_api()
         w.process_json()
-        #w.update_database()
+        #w.five_day_forecast()
