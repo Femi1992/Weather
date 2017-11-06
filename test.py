@@ -13,6 +13,7 @@ class weather():
         q = ""
         request_url = weather_url + 'appid=' + api_id + "&q="
         json_object = ""
+        currentCity = "You are currently in the city"
 
 
         def __init__(self):
@@ -28,7 +29,7 @@ class weather():
             current_country = j['time_zone']
             current_city = current_country.split("/")[1]
 
-            print "You are currently in the city of", current_city, "\n"
+            print current_city, current_city, "\n"
 
 
             """
@@ -85,6 +86,20 @@ class weather():
             print "The current temperature in", self.q, "is", str(temp_celsius), "celsius and the current conditions are", current_conditions,"\n"
 
 
+        def five_day_forecast(self):
+            five_day_url = 'http://api.openweathermap.org/data/2.5/forecast?q='+self.q+'&appid=6b35061c42fdbe1965095189659a796b'
+            json_object_five = requests.get(five_day_url).json()
+            forecast = json_object_five['list']
+
+            print "FIVE DAY FORECAST\n"
+            for items in forecast:
+                description = items['weather'][0]['description']
+                date = items['dt_txt']
+                day_temp = items['main']['temp']
+                day_temp_celsius = day_temp - 273.15
+                print "Date: ", date,"\n", "Description: ", description,"\n", "Temperature: ",day_temp_celsius,"\n"
+
+
         def update_database(self):
             """
             now = datetime.datetime.now()
@@ -95,9 +110,9 @@ class weather():
                                    })"""
 
 if __name__ == "__main__":
-        w = weather()
-        w.get_user_automatic()
-        w.get_user_location()
-        w.call_api()
-        w.process_json()
-        #w.five_day_forecast()
+        weather = weather()
+        weather.get_user_automatic()
+        weather.get_user_location()
+        weather.call_api()
+        weather.process_json()
+        weather.five_day_forecast()
