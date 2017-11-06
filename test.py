@@ -29,7 +29,7 @@ class weather():
             current_country = j['time_zone']
             current_city = current_country.split("/")[1]
 
-            print current_city, current_city, "\n"
+            print current_city,"\n"
 
 
             """
@@ -65,7 +65,6 @@ class weather():
                     data = json.load(data_file)
 
                     data[loc]["id"]
-
             print ""
 
         def get_user_location(self):
@@ -98,6 +97,13 @@ class weather():
                 day_temp = items['main']['temp']
                 day_temp_celsius = day_temp - 273.15
                 print "Date: ", date,"\n", "Description: ", description,"\n", "Temperature: ",day_temp_celsius,"\n"
+
+        #function that allows user to look up a particular item from the json object
+        def get_info(self):
+            query = input("query")
+            for x in self.json_object:
+
+
 
 
         def update_database(self):
