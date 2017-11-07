@@ -13,14 +13,13 @@ class weather():
         q = ""
         request_url = weather_url + 'appid=' + api_id + "&q="
         json_object = ""
-        currentCity = "You are currently in the city"
-
+        current_conditions = ""
 
         def __init__(self):
             print "Weather APP\n"
             client = MongoClient('localhost', 27017)
             db = client.weather
-            collection = db.weather_collection
+            self.collection = db.weather_collection
 
 
         def get_user_automatic(self):
@@ -79,10 +78,10 @@ class weather():
 
         def process_json(self):
             temp_kelvin = float(self.json_object['main']['temp'])
-            current_conditions = self.json_object['weather'][0]['description']
+            self.current_conditions = self.json_object['weather'][0]['description']
             temp_celsius = temp_kelvin - 273.15
 
-            print "The current temperature in", self.q, "is", str(temp_celsius), "celsius and the current conditions are", current_conditions,"\n"
+            print "The current temperature in", self.q, "is", str(temp_celsius), "celsius and the current conditions are", self.current_conditions,"\n"
 
 
         def five_day_forecast(self):
@@ -98,22 +97,15 @@ class weather():
                 day_temp_celsius = day_temp - 273.15
                 print "Date: ", date,"\n", "Description: ", description,"\n", "Temperature: ",day_temp_celsius,"\n"
 
-        #function that allows user to look up a particular item from the json object
-        def get_info(self):
-            query = input("query")
-            for x in self.json_object:
-
-
 
 
         def update_database(self):
-            """
             now = datetime.datetime.now()
             time_of_call = now.strftime("%H:%M")
-            self.db.weather.insert_one({"City": self.q,
-                                   "Weather Condition": self.current_conditions,
-                                   "time": time_of_call
-                                   })"""
+            self.collection.insert_one({"City": self.q,
+                                        "Weather Condition": self.current_conditions,
+                                        "time": time_of_call
+                                       })
 
 if __name__ == "__main__":
         weather = weather()
@@ -122,3 +114,5 @@ if __name__ == "__main__":
         weather.call_api()
         weather.process_json()
         weather.five_day_forecast()
+        weather.update_database()
+
